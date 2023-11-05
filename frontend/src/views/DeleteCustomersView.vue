@@ -20,7 +20,7 @@ onMounted(async () => {
 });
 
 const formData = reactive({
-    id: '', // Field for customer ID to delete
+    id: '',
 });
 
 const deleteCustomer = async () => {
@@ -34,9 +34,6 @@ const deleteCustomer = async () => {
         });
 
         if (response.status === 200) {
-            // Customer and their reservations deleted successfully, you can handle this as needed
-
-            // Clear the ID field after a successful delete
             formData.id = '';
         }
     } catch (error) {
@@ -47,8 +44,6 @@ const deleteCustomer = async () => {
 
 <template>
     <div class="p-4">
-
-        <!-- Form to delete a customer based on ID -->
         <form @submit.prevent="deleteCustomer" class="mt-4 bg-white rounded-lg shadow-md p-4">
             <label for="id" class="block font-semibold">Customer ID:</label>
             <input type="number" id="id" v-model="formData.id" required

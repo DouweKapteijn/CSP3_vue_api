@@ -30,7 +30,7 @@ onMounted(async () => {
                     <p class="mb-2">First Name: {{ user.fname }}</p>
                     <p class="mb-2">Last Name: {{ user.lname }}</p>
                     <p class="mb-2">Username: {{ user.uname }}</p>
-                    <p class="mb-2">User Role: {{ user['user-role'] }}</p>
+                    <p class="mb-2">User Role: {{ user.userrole }}</p>
                     <p class="mb-2">Password: {{ user.password }}</p>
                 </li>
             </ul>

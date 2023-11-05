@@ -20,7 +20,7 @@ onMounted(async () => {
 });
 
 const formData = reactive({
-    id: null, // New field for customer ID to update
+    id: null,
     fname: null,
     lname: null,
     uname: null,
@@ -46,9 +46,6 @@ const updateCustomer = async () => {
         });
 
         if (response.status === 200) {
-            // Item(s) updated successfully, you can handle this as needed
-
-            // Reset form fields to null after a successful update
             for (const key in formData) {
                 formData[key] = null;
             }
@@ -61,9 +58,6 @@ const updateCustomer = async () => {
 
 <template>
     <div>
-        <!-- Existing code for displaying the list of customers -->
-        
-        <!-- Form to update a customer with partial data -->
         <form @submit.prevent="updateCustomer" class="mb-4 p-4 border rounded-lg">
             <label for="id" class="block">Customer ID:</label>
             <input type="number" id="id" v-model="formData.id" required class="block border p-2 w-full mb-2">

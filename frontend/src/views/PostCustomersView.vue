@@ -38,7 +38,7 @@ const addCustomer = async () => {
         });
 
         if (response.status === 201) {
-            // Item added successfully, you can handle this as needed
+            // Item added successfully
         }
     } catch (error) {
         console.error(error);
@@ -48,9 +48,6 @@ const addCustomer = async () => {
 
 <template>
     <div>
-        <!-- Existing code for displaying the list of customers -->
-        
-        <!-- Form to add a new customer -->
         <form @submit.prevent="addCustomer" class="bg-white rounded-lg p-4 shadow-md">
             <label for="fname" class="block font-bold">First Name:</label>
             <input type="text" id="fname" v-model="formData.fname" required class="w-full border rounded px-3 py-2 mb-2">

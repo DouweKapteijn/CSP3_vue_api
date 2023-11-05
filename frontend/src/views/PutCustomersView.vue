@@ -20,7 +20,7 @@ onMounted(async () => {
 });
 
 const formData = reactive({
-    id: '', // New field for customer ID to update
+    id: '',
     fname: '',
     lname: '',
     uname: '',
@@ -39,7 +39,7 @@ const updateCustomer = async () => {
         });
 
         if (response.status === 200) {
-            // Row updated successfully, you can handle this as needed
+            // Item updated successfully
         }
     } catch (error) {
         console.error(error);
@@ -49,9 +49,6 @@ const updateCustomer = async () => {
 
 <template>
     <div>
-        <!-- Existing code for displaying the list of customers -->
-        
-        <!-- Form to update a customer -->
         <form @submit.prevent="updateCustomer" class="bg-white rounded-lg p-4 shadow-md">
             <label for="id" class="block font-bold">Customer ID:</label>
             <input type="number" id="id" v-model="formData.id" required class="w-full border rounded px-3 py-2 mb-2">
