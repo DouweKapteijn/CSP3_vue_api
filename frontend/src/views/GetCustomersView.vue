@@ -1,17 +1,15 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
 const data = ref(null);
 const loading = ref(true);
 
 onMounted(async () => {
     try {
-        const response = await fetch('http://127.0.0.1:8080/CustomersData', {
-            method: 'GET',
-        });
+        const response = await axios.get('http://127.0.0.1:8080/CustomersData');
 
-        const res = await response.json();
-        data.value = res;
+        data.value = response.data;
         loading.value = false;
     } catch (error) {
         console.error(error);
@@ -32,6 +30,12 @@ onMounted(async () => {
                     <p class="mb-2">Username: {{ user.uname }}</p>
                     <p class="mb-2">User Role: {{ user.userrole }}</p>
                     <p class="mb-2">Password: {{ user.password }}</p>
+                    <p class="mb-2">
+                        <router-link :to="'/patchcustomers/' + user.id" class="border-solid bg-gray-300 border-gray-400 border-2">Update</router-link>
+                    </p>
+                    <p class="mb-2">
+                        <router-link :to="'/deletecustomers/' + user.id" class="border-solid bg-gray-300 border-gray-400 border-2">Delete</router-link>
+                    </p>
                 </li>
             </ul>
         </div>

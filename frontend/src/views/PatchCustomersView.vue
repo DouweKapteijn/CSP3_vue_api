@@ -1,31 +1,43 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
+import axios from 'axios';
+import { useRoute, useRouter } from 'vue-router';
 
+const route = useRoute();  // useRoute is used to access the current route
+const router = useRouter(); // useRouter is used to access the router instance
 const data = ref(null);
 const loading = ref(true);
-
-onMounted(async () => {
-    try {
-        const response = await fetch('http://127.0.0.1:8080/CustomersData', {
-            method: 'GET',
-        });
-
-        const res = await response.json();
-        data.value = res;
-        loading.value = false;
-    } catch (error) {
-        console.error(error);
-        loading.value = false;
-    }
-});
+const id = ref(route.params.id); // Using ref to make it reactive
 
 const formData = reactive({
-    id: null,
     fname: null,
     lname: null,
     uname: null,
     userrole: null,
     password: null,
+});
+
+onMounted(async () => {
+    try {
+        const response = await axios.get(`http://127.0.0.1:8080/CustomersData/${id.value}`);
+        data.value = response.data;
+        loading.value = false;
+
+        // Log the fetched data
+        // console.log('Fetched Data:', response.data);
+
+        // Populate the form with old data
+        const user = response.data.message[0]; // Assuming the response is an array
+        formData.fname = user.fname;
+        formData.lname = user.lname;
+        formData.uname = user.uname;
+        formData.userrole = user.userrole;
+        formData.password = user.password;
+
+    } catch (error) {
+        // console.error('Error Fetching Data:', error);
+        loading.value = false;
+    }
 });
 
 const updateCustomer = async () => {
@@ -37,18 +49,18 @@ const updateCustomer = async () => {
     }
 
     try {
-        const response = await fetch('http://127.0.0.1:8080/CustomersData', {
-            method: 'PATCH',
+        const response = await axios.patch(`http://127.0.0.1:8080/CustomersData/${id.value}`, dataToUpdate, {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(dataToUpdate),
         });
 
         if (response.status === 200) {
             for (const key in formData) {
                 formData[key] = null;
             }
+
+            router.push('/getcustomers');
         }
     } catch (error) {
         console.error(error);
@@ -59,9 +71,6 @@ const updateCustomer = async () => {
 <template>
     <div>
         <form @submit.prevent="updateCustomer" class="mb-4 p-4 border rounded-lg">
-            <label for="id" class="block">Customer ID:</label>
-            <input type="number" id="id" v-model="formData.id" required class="block border p-2 w-full mb-2">
-
             <label for="fname" class="block">First Name:</label>
             <input type="text" id="fname" v-model="formData.fname" class="block border p-2 w-full mb-2">
 
@@ -81,4 +90,3 @@ const updateCustomer = async () => {
         </form>
     </div>
 </template>
-

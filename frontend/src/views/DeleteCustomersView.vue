@@ -1,17 +1,23 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
+import axios from 'axios';
+import { useRoute, useRouter } from 'vue-router';
 
+const route = useRoute();
+const router = useRouter();
 const data = ref(null);
 const loading = ref(true);
+const id = ref(route.params.id);
+
+const formData = reactive({
+    id: '',
+});
 
 onMounted(async () => {
     try {
-        const response = await fetch('http://127.0.0.1:8080/CustomersData', {
-            method: 'GET',
-        });
+        const response = await axios.get(`http://127.0.0.1:8080/CustomersData/${id.value}`);
 
-        const res = await response.json();
-        data.value = res;
+        data.value = response.data;
         loading.value = false;
     } catch (error) {
         console.error(error);
@@ -19,22 +25,21 @@ onMounted(async () => {
     }
 });
 
-const formData = reactive({
-    id: '',
-});
-
 const deleteCustomer = async () => {
     try {
-        const response = await fetch('http://127.0.0.1:8080/CustomersData', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
+        // Display a confirmation message before deletion
+        const confirmDelete = window.confirm(`Are you sure you want to delete customer ${id.value}?`);
+        
+        if (confirmDelete) {
+            const response = await axios.delete(`http://127.0.0.1:8080/CustomersData/${id.value}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-        if (response.status === 200) {
-            formData.id = '';
+            if (response.status === 200) {
+                router.push('/getcustomers');
+            }
         }
     } catch (error) {
         console.error(error);
@@ -45,14 +50,11 @@ const deleteCustomer = async () => {
 <template>
     <div class="p-4">
         <form @submit.prevent="deleteCustomer" class="mt-4 bg-white rounded-lg shadow-md p-4">
-            <label for="id" class="block font-semibold">Customer ID:</label>
-            <input type="number" id="id" v-model="formData.id" required
-                class="w-full mt-2 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring focus:ring-blue-300">
+            <p class="mb-4 text-red-500 font-semibold">You are about to delete customer {{ id }}. Are you sure?</p>
 
-            <button type="submit" class="w-full mt-4 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600">
+            <button type="submit" class="w-full bg-red-500 text-white py-2 rounded-lg hover:bg-red-600">
                 Delete Customer
             </button>
         </form>
     </div>
 </template>
-

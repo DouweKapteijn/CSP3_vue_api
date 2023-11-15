@@ -1,17 +1,17 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const data = ref(null);
 const loading = ref(true);
 
 onMounted(async () => {
     try {
-        const response = await fetch('http://127.0.0.1:8080/CustomersData', {
-            method: 'GET',
-        });
-
-        const res = await response.json();
-        data.value = res;
+        const response = await axios.get('http://127.0.0.1:8080/CustomersData');
+        data.value = response.data;
         loading.value = false;
     } catch (error) {
         console.error(error);
@@ -29,16 +29,14 @@ const formData = reactive({
 
 const addCustomer = async () => {
     try {
-        const response = await fetch('http://127.0.0.1:8080/CustomersData', {
-            method: 'POST',
+        const response = await axios.post('http://127.0.0.1:8080/CustomersData', formData, {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(formData),
         });
 
         if (response.status === 201) {
-            // Item added successfully
+            router.push('/getcustomers');
         }
     } catch (error) {
         console.error(error);
