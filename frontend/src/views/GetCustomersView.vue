@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
 
 const data = ref(null);
 const loading = ref(true);
@@ -16,6 +17,15 @@ onMounted(async () => {
         loading.value = false;
     }
 });
+
+const admin = ref(false);
+const token = localStorage.getItem('jwtToken');
+
+const decodeToken = jwtDecode(token); 
+if (decodeToken.role === 'admin') {
+    admin.value = true;
+}
+
 </script>
 
 <template>
@@ -30,10 +40,10 @@ onMounted(async () => {
                     <p class="mb-2">Username: {{ user.uname }}</p>
                     <p class="mb-2">User Role: {{ user.userrole }}</p>
                     <p class="mb-2">Password: {{ user.password }}</p>
-                    <p class="mb-2">
+                    <p class="mb-2" v-if="admin">
                         <router-link :to="'/patchcustomers/' + user.id" class="border-solid bg-gray-300 border-gray-400 border-2">Update</router-link>
                     </p>
-                    <p class="mb-2">
+                    <p class="mb-2" v-if="admin">
                         <router-link :to="'/deletecustomers/' + user.id" class="border-solid bg-gray-300 border-gray-400 border-2">Delete</router-link>
                     </p>
                 </li>

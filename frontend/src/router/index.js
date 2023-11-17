@@ -1,5 +1,5 @@
     import { createRouter, createWebHistory } from 'vue-router';
-    // import jwt from 'jsonwebtoken';
+    import { jwtDecode } from "jwt-decode";
 
     const routes = [
         {
@@ -16,14 +16,18 @@
             path: '/getcustomers',
             name: 'GetCustomers',
             component: () => import('../views/GetCustomersView.vue'),
-            // meta: { requiresAuth: true, roles: 'admin' }, 
-            beforeEnter: (to) => {
+            beforeEnter: () => {
                 const token = localStorage.getItem('jwtToken');
-                
                 if (!token) {
                     return '/login';
                 } else {
-                    return true;
+                    const decodeToken = jwtDecode(token); 
+                    if (decodeToken.role === 'admin' || decodeToken.role === 'user') {
+                        return true;
+                    }
+                    else {
+                        return '/login';
+                    }
                 }
             }
         },
@@ -31,14 +35,18 @@
             path: '/postcustomers',
             name: 'postCustomers',
             component: () => import('../views/PostCustomersView.vue'),
-            // meta: { requiresAuth: true, roles: 'admin' }, 
-            beforeEnter: (to) => {
+            beforeEnter: () => {
                 const token = localStorage.getItem('jwtToken');
-                
                 if (!token) {
                     return '/login';
                 } else {
-                    return true;
+                    const decodeToken = jwtDecode(token); 
+                    if (decodeToken.role === 'admin') {
+                        return true;
+                    }
+                    else {
+                        return '/login';
+                    }
                 }
             }
         },
@@ -46,14 +54,18 @@
             path: '/patchcustomers/:id',
             name: 'PatchCustomers',
             component: () => import('../views/PatchCustomersView.vue'),
-            // meta: { requiresAuth: true, roles: 'admin' }, 
-            beforeEnter: (to) => {
+            beforeEnter: () => {
                 const token = localStorage.getItem('jwtToken');
-                
                 if (!token) {
                     return '/login';
                 } else {
-                    return true;
+                    const decodeToken = jwtDecode(token); 
+                    if (decodeToken.role === 'admin') {
+                        return true;
+                    }
+                    else {
+                        return '/login';
+                    }
                 }
             }
         },
@@ -61,14 +73,18 @@
             path: '/deletecustomers/:id',
             name: 'DeleteCustomers',
             component: () => import('../views/DeleteCustomersView.vue'),
-            // meta: { requiresAuth: true, roles: 'admin' }, 
-            beforeEnter: (to) => {
+            beforeEnter: () => {
                 const token = localStorage.getItem('jwtToken');
-                
                 if (!token) {
                     return '/login';
                 } else {
-                    return true;
+                    const decodeToken = jwtDecode(token); 
+                    if (decodeToken.role === 'admin') {
+                        return true;
+                    }
+                    else {
+                        return '/login';
+                    }
                 }
             }
         },
@@ -77,29 +93,16 @@
             name: 'Login',
             component: () => import('../views/loginView.vue'),
         },
+        {
+            path: '/logout',
+            name: 'Logout',
+            component: () => import('../views/logoutView.vue'),
+        },
     ];
 
     const router = createRouter({
         history: createWebHistory(),
         routes,
     });
-
-    // router.beforeEach((to, from, next) => {
-    //     const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-    //     const token = localStorage.getItem('jwtToken');
-    
-    //     if (requiresAuth && !token) {
-    //         next('/login');
-    //     } else {
-    //         const userRole = token ? jwt.decode(token).role : null;
-    //         const allowedRoles = to.meta.roles || [];
-        
-    //         if (requiresAuth && !allowedRoles.includes(userRole)) {
-    //             next('/login');
-    //         } else {
-    //             next();
-    //         }
-    //     }
-    // });
 
     export default router;

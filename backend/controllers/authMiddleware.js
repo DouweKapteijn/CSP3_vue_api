@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-// const { secretKey } = require('./login'); // Import the secret key from login.js
 const secretKey = require('./config');
 
 

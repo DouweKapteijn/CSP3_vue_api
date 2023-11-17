@@ -4,16 +4,12 @@ const jwt = require('jsonwebtoken');
 const mysql = require('mysql');
 const secretKey = require('./config');
 
-
 const con = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
   database: "csp3-customers"
 });
-
-// Import the middleware for token authentication
-// const authenticateToken = require('./authMiddleware');
 
 router.post('/', (req, res) => {
   const { uname, password } = req.body;
@@ -24,9 +20,9 @@ router.post('/', (req, res) => {
       console.error(err);
       res.status(500).json({ message: 'Internal Server Error' });
     } else {
-      if (results.length > 0 && results[0].userrole === 'admin') {
+      if (results.length > 0) {
         const user = results[0];
-        const token = jwt.sign({ id: user.id, uname: user.uname, role: user.role }, secretKey);
+        const token = jwt.sign({ uname: user.uname, role: user.userrole }, secretKey);
         res.json({ token });
       } else {
         res.status(401).json({ error: 'Invalid credentials' });

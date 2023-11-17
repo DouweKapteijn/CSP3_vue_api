@@ -2,7 +2,6 @@
     import { ref } from 'vue';
     import axios from 'axios';
     import { useRouter } from 'vue-router';
-    // import jwt from 'jsonwebtoken';
 
     const router = useRouter();
     const formData = ref({ uname: '', password: '' });
@@ -11,8 +10,8 @@
     try {
         const response = await axios.post('http://127.0.0.1:8080/login', formData.value);
         localStorage.setItem('jwtToken', response.data.token);
-        // localStorage.setItem('role', response.data.role);
         router.push('/');
+        location.reload();
     } catch (error) {
         console.error(error);
     }
