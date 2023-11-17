@@ -4,7 +4,7 @@ import { RouterView, RouterLink } from 'vue-router'
 
 <template>
     <div class="w-full bg-blue-300">
-        <nav class="flex space-x-2">
+        <nav class="flex space-x-2 w-full">
             <RouterLink to="/">Home</RouterLink>
             ||
             <RouterLink to="/about">About</RouterLink>
@@ -12,6 +12,7 @@ import { RouterView, RouterLink } from 'vue-router'
             <RouterLink to="/getcustomers">Get Customers</RouterLink>
             ||
             <RouterLink to="/postcustomers">Post Customers</RouterLink>
+            <RouterLink to="/login" class="absolute pr-2 right-0">login</RouterLink>	
         </nav>
     </div>
     <div id="app">

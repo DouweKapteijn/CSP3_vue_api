@@ -8,6 +8,7 @@ const getCustomerByIdController = require('./controllers/getCustomerById');
 const addCustomerController = require('./controllers/addCustomer');
 const updateCustomerController = require('./controllers/updateCustomer');
 const deleteCustomerController = require('./controllers/deleteCustomer');
+const loginController = require('./controllers/login');
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -18,6 +19,12 @@ app.use('/CustomersData', getCustomerByIdController);
 app.use('/CustomersData', addCustomerController);
 app.use('/CustomersData', updateCustomerController);
 app.use('/CustomersData', deleteCustomerController);
+app.use('/login', loginController);
+
+const authenticateToken = require('./controllers/authMiddleware');
+
+app.use(authenticateToken);
+
 
 app.listen(port, () => (
     console.log('app listening on port ' + port)
